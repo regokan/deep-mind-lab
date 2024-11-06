@@ -1,0 +1,15 @@
+#### Poetry ####
+
+# Virtual environment
+.venv
+
+# Lock file
+poetry.lock
+
+#### Python ####
+
+# Pycache
+__pycache__/
+
+# Jupyter
+.ipynb_checkpoints/
