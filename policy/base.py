@@ -25,7 +25,6 @@ class ValueBasedPolicy(BasePolicy):
     def __init__(self, q_table, action_space):
         super().__init__(q_table, action_space)
 
-
     @abstractmethod
     def update_policy(self, state, action, reward, next_state, done):
         """Update the policy using a value-based method."""

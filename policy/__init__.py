@@ -2,6 +2,7 @@
 
 from .alphaMC import AlphaMCPolicy
 from .base import BasePolicy
+from .discretizedSarsaMax import DiscretizedSarsaMaxPolicy
 from .everyVisitMC import EveryVisitMCPolicy
 from .firstVisitMC import FirstVisitMCPolicy
 from .random import RandomPolicy
@@ -18,4 +19,5 @@ __all__ = [
     "SarsaMaxPolicy",
     "SarsaExpectedPolicy",
     "AlphaMCPolicy",
+    "DiscretizedSarsaMaxPolicy",
 ]
