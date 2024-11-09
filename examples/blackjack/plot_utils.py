@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
@@ -42,7 +42,7 @@ def plot_policy(policy):
 
     def get_Z(x, y, usable_ace):
         if (x, y, usable_ace) in policy:
-            return policy[x, y, usable_ace]
+            return np.round(np.max(policy[x, y, usable_ace]))
         else:
             return 1
 
