@@ -1,8 +1,17 @@
 import numpy as np
 from collections import defaultdict
 
+
 class Agent:
-    def __init__(self, nA=6, alpha=0.1, gamma=1.0, epsilon=1.0, min_epsilon=0.01, epsilon_decay=0.995):
+    def __init__(
+        self,
+        nA=6,
+        alpha=0.1,
+        gamma=1.0,
+        epsilon=1.0,
+        min_epsilon=0.01,
+        epsilon_decay=0.995,
+    ):
         """Initialize agent.
 
         Params
