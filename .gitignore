@@ -13,3 +13,6 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Checkpoints
+checkpoints/
