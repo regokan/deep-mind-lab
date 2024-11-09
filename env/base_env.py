@@ -58,11 +58,8 @@ class Environment:
             action = policy.select_action(state)
             img.set_data(self.render())
             plt.axis("off")
-            try:
-                display.display(plt.gcf())
-                display.clear_output(wait=True)
-            except:
-                pass
+            display.display(plt.gcf())
+            display.clear_output(wait=True)
             state, reward, done, _, _ = self.step(action)
             score += reward
             if done:
