@@ -18,6 +18,11 @@ pygame = "2.1.0"
 pyvirtualdisplay = "^3.0"
 torch = "^2.5.1"
 torchvision = "^0.20.1"
+wheel = "^0.45.0"
+setuptools = "^75.3.0"
+mlagents = "^1.1.0"
+grpcio = "1.48.2"
+h5py = "^3.12.1"
 
 
 [tool.poetry.group.dev.dependencies]

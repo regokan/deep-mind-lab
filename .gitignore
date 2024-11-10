@@ -16,3 +16,6 @@ __pycache__/
 
 # Checkpoints
 checkpoints/
+
+# Unity Environment
+unity/
