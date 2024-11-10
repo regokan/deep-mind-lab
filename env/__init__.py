@@ -1,3 +1,6 @@
-from .base_env import Environment
+from .base import BaseEnvironment
+from .openai import Gym
+from .unity import MLAgents
+from .unityagents import UnityAgents
 
-__all__ = ["Environment"]
+__all__ = ["BaseEnvironment", "Gym", "UnityAgents", "MLAgents"]
