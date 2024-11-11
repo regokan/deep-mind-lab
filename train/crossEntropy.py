@@ -52,7 +52,7 @@ class CrossEntropyTrainer(BaseTrainer):
         self.sigma = sigma
         self.device = device
 
-    def _evaluate(self, weights, gamma=1.0):
+    def _collect_experience(self, weights, gamma=1.0):
         self.policy.update_exploration(weights)
         episode_return = 0.0
         state = self.environment.reset()[0]
@@ -80,14 +80,14 @@ class CrossEntropyTrainer(BaseTrainer):
                 for _ in range(self.pop_size)
             ]
             rewards = np.array(
-                [self._evaluate(weights, self.gamma) for weights in weights_pop]
+                [self._collect_experience(weights, self.gamma) for weights in weights_pop]
             )
 
             elite_idxs = rewards.argsort()[-n_elite:]
             elite_weights = [weights_pop[i] for i in elite_idxs]
             best_weight = np.array(elite_weights).mean(axis=0)
 
-            reward = self._evaluate(best_weight, gamma=1.0)
+            reward = self._collect_experience(best_weight, gamma=1.0)
             scores_window.append(reward)
             scores.append(reward)
 
