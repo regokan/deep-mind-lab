@@ -1,5 +1,6 @@
 """Cross Entropy policy."""
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -18,7 +19,8 @@ class CrossEntropyPolicy(BasePolicy, nn.Module):
         self.fc2 = nn.Linear(self.h_size, self.a_size)
 
     def _forward(self, state):
-        state = torch.from_numpy(state).float().to(self.device)
+        if isinstance(state, np.ndarray):
+            state = torch.from_numpy(state).float().unsqueeze(0).to(self.device)
         x = F.relu(self.fc1(state))
         x = F.tanh(self.fc2(x))
         return x.cpu().data
