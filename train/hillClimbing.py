@@ -15,7 +15,9 @@ class TrainerHillClimbing(BaseTrainer):
         print_every=100,
         target_score=195.0,
     ):
-        if not hasattr(policy, "select_action") or not hasattr(policy, "update_exploration"):
+        if not hasattr(policy, "select_action") or not hasattr(
+            policy, "update_exploration"
+        ):
             raise ValueError(
                 "Policy must implement 'select_action' and 'update_exploration' methods."
             )
