@@ -8,15 +8,17 @@ from .base import BasePolicy
 
 
 class CrossEntropyPolicy(BasePolicy, nn.Module):
-    def __init__(self, s_size, a_size, h_size=16):
+    def __init__(self, s_size, a_size, h_size=16, device="cpu"):
         super().__init__()
         self.s_size = s_size
         self.a_size = a_size
         self.h_size = h_size
+        self.device = device
         self.fc1 = nn.Linear(self.s_size, self.h_size)
         self.fc2 = nn.Linear(self.h_size, self.a_size)
 
     def _forward(self, state):
+        state = torch.from_numpy(state).float().to(self.device)
         x = F.relu(self.fc1(state))
         x = F.tanh(self.fc2(x))
         return x.cpu().data
