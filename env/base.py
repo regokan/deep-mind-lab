@@ -55,5 +55,5 @@ class BaseEnvironment(ABC):
             state, reward, done, _, _ = self.step(action)
             score += reward
             if done:
-                print("Score: ", score)
                 break
+        print("Score: ", score)
