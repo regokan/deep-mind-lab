@@ -70,12 +70,13 @@ class CrossEntropyTrainer(BaseTrainer):
         scores_window = deque(maxlen=100)  # last 100 scores
 
         n_elite = int(self.pop_size * self.elite_frac)
-        best_w = self.sigma * np.random.randn(self.policy.get_weights_dim())
+        best_weight = self.sigma * np.random.randn(self.policy.get_weights_dim())
 
         for episode in range(1, episodes + 1):
             rewards = []
             weights_pop = [
-                best_w + (self.sigma * np.random.randn(self.policy.get_weights_dim()))
+                best_weight
+                + (self.sigma * np.random.randn(self.policy.get_weights_dim()))
                 for _ in range(self.pop_size)
             ]
             rewards = np.array(
