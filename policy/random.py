@@ -1,5 +1,7 @@
 """Random policy."""
 
+import numpy as np
+
 from .base import BasePolicy
 
 
@@ -13,9 +15,17 @@ class RandomPolicy(BasePolicy):
         """
         self.action_space = action_space
 
-    def select_action(self, _):
+    def select_action(self, len_decision_steps):
         """Selects a random action, ignoring the current state."""
-        return self.action_space.sample()
+        # Check if action space is from OpenAI Gym
+        if hasattr(self.action_space, "sample"):
+            return self.action_space.sample()
+
+        # If using ML-Agents, handle mixed action space
+        if hasattr(self.action_space, "is_discrete") or hasattr(
+            self.action_space, "is_continuous"
+        ):
+            return self.action_space.random_action(len_decision_steps)
 
     def update_exploration(self, episode):
         """Does nothing since this policy doesn't learn from experience."""
