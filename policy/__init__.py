@@ -2,6 +2,7 @@
 
 from .alphaMC import AlphaMCPolicy
 from .base import BasePolicy
+from .crossEntropy import CrossEntropyPolicy
 from .discretizedSarsaMax import DiscretizedSarsaMaxPolicy
 from .dqn import DQNPolicy
 from .everyVisitMC import EveryVisitMCPolicy
@@ -24,4 +25,5 @@ __all__ = [
     "DiscretizedSarsaMaxPolicy",
     "DQNPolicy",
     "HillClimbingPolicy",
+    "CrossEntropyPolicy",
 ]
