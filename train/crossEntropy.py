@@ -80,7 +80,10 @@ class CrossEntropyTrainer(BaseTrainer):
                 for _ in range(self.pop_size)
             ]
             rewards = np.array(
-                [self._collect_experience(weights, self.gamma) for weights in weights_pop]
+                [
+                    self._collect_experience(weights, self.gamma)
+                    for weights in weights_pop
+                ]
             )
 
             elite_idxs = rewards.argsort()[-n_elite:]
