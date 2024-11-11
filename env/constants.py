@@ -2,6 +2,7 @@
 
 _SUPPORTED_OPENAI_ENVIRONMENTS = {
     "mountaincar": "MountainCar-v0",
+    "mountaincarcontinuous": "MountainCarContinuous-v0",
     "cliffwalking": "CliffWalking-v0",
     "lunarlander": "LunarLander-v2",
     "blackjack": "Blackjack-v1",
