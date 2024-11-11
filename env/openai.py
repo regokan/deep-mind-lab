@@ -9,7 +9,7 @@ from .constants import _SUPPORTED_OPENAI_ENVIRONMENTS
 class Gym(BaseEnvironment):
     """Concrete implementation for OpenAI Gym environments."""
 
-    def __init__(self, name: str, render_mode: str = "rgb_array"):
+    def __init__(self, name: str, render_mode: str = "rgb_array", seed: int = 42):
         if name not in _SUPPORTED_OPENAI_ENVIRONMENTS:
             raise ValueError(
                 f"Unsupported environment: {name}, "
@@ -20,6 +20,7 @@ class Gym(BaseEnvironment):
         self.env = gym.make(
             _SUPPORTED_OPENAI_ENVIRONMENTS[name], render_mode=render_mode
         )
+        self.env.seed(seed)
 
     def reset(self) -> Tuple[Any, ...]:
         return self.env.reset()
