@@ -11,9 +11,9 @@ class BaseTrainer(ABC):
         self.environment = environment
 
     @abstractmethod
-    def train(self, episodes):
+    def train(self, episodes, **kwargs):
         """Train the policy on the environment for a certain number of episodes."""
 
     @abstractmethod
-    def evaluate(self, episodes):
+    def evaluate(self, episodes, **kwargs):
         """Evaluate the policy on the environment."""
