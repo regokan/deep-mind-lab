@@ -10,6 +10,7 @@ from .firstVisitMC import FirstVisitMCPolicy
 from .hillClimbing import HillClimbingPolicy
 from .random import RandomPolicy
 from .reinforce import ReinforcePolicy
+from .reinforceParallel import ReinforceParallelPolicy
 from .sarsa import SarsaPolicy
 from .sarsaExpected import SarsaExpectedPolicy
 from .sarsaMax import SarsaMaxPolicy
@@ -28,4 +29,5 @@ __all__ = [
     "HillClimbingPolicy",
     "CrossEntropyPolicy",
     "ReinforcePolicy",
+    "ReinforceParallelPolicy",
 ]
