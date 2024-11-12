@@ -4,8 +4,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.distributions import Categorical
 import torch.nn.init as init
+from torch.distributions import Categorical
 
 from .base import BasePolicy
 
