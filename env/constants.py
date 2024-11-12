@@ -9,6 +9,7 @@ _SUPPORTED_OPENAI_ENVIRONMENTS = {
     "frozenlake": "FrozenLake-v1",
     "taxi": "Taxi-v3",
     "cartpole": "CartPole-v1",
+    "pong": "ALE/Pong-v5",
 }
 
 _SUPPORTED_UNITY_ENVIRONMENTS = {
