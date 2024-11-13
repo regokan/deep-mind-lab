@@ -8,6 +8,7 @@ from .dqn import DQNPolicy
 from .everyVisitMC import EveryVisitMCPolicy
 from .firstVisitMC import FirstVisitMCPolicy
 from .hillClimbing import HillClimbingPolicy
+from .ppoParallel import PPOParallelPolicy
 from .random import RandomPolicy
 from .reinforce import ReinforcePolicy
 from .reinforceParallel import ReinforceParallelPolicy
@@ -30,4 +31,5 @@ __all__ = [
     "CrossEntropyPolicy",
     "ReinforcePolicy",
     "ReinforceParallelPolicy",
+    "PPOParallelPolicy",
 ]
