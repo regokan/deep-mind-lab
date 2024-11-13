@@ -1,8 +1,11 @@
 from collections import deque
 
 import numpy as np
+import progressbar as pb
 
 from .base import BaseTrainer
+
+widget = ["training loop: ", pb.Percentage(), " ", pb.Bar(), " ", pb.ETA()]
 
 
 class ReinforceTrainer(BaseTrainer):
@@ -11,6 +14,7 @@ class ReinforceTrainer(BaseTrainer):
         policy,
         environment,
         optimizer,
+        scheduler=None,
         max_steps_per_episode=1000,
         gamma=0.99,
         print_every=100,
@@ -29,8 +33,10 @@ class ReinforceTrainer(BaseTrainer):
         self.gamma = gamma
         self.print_every = print_every
         self.target_score = target_score
+        self.scheduler = scheduler
 
-    def train(self, episodes):
+    def train(self, episodes, **kwargs):
+        timer = pb.ProgressBar(widgets=widget, maxval=episodes).start()
         scores = []  # list containing scores from each episode
         scores_window = deque(maxlen=100)  # last 100 scores
 
@@ -48,6 +54,17 @@ class ReinforceTrainer(BaseTrainer):
             scores_window.append(sum(rewards))
             scores.append(sum(rewards))
 
+            if kwargs.get("future_rewards_only", False):
+                # convert rewards to future rewards
+                rewards = np.array(rewards)
+                rewards = rewards[::-1].cumsum(axis=0)[::-1]
+
+            if kwargs.get("normalize_rewards", False):
+                mean = np.mean(rewards)
+                std = np.std(rewards) + 1.0e-10
+
+                rewards = (rewards - mean) / std
+
             discounts = [self.gamma**i for i in range(len(rewards) + 1)]
             R = sum(a * b for (a, b) in zip(discounts, rewards))
 
@@ -55,14 +72,29 @@ class ReinforceTrainer(BaseTrainer):
             self.policy.update_exploration(R)
             self.optimizer.step()
 
+            if self.scheduler:
+                self.scheduler.step()
+
             if episode % self.print_every == 0:
-                print(f"Episode {episode}\tAverage Score: {np.mean(scores_window):.2f}")
+                if self.scheduler:
+                    current_lr = self.scheduler.get_last_lr()[0]
+                    print(
+                        f"Episode {episode}\tAverage Score: {np.mean(scores_window):.2f}\tLearning Rate: {current_lr:.6f}"
+                    )
+                else:
+                    print(
+                        f"Episode {episode}\tAverage Score: {np.mean(scores_window):.2f}"
+                    )
             if np.mean(scores_window) >= self.target_score:
                 print(
                     f"Environment solved in {episode:d} episodes!\tAverage Score: {np.mean(scores_window):.2f}"
                 )
                 break
 
+            # update progress widget bar
+            timer.update(episode)
+
+        timer.finish()
         return scores
 
     def evaluate(self, episodes):
