@@ -1,8 +1,12 @@
 from collections import deque
-from typing import Callable
+from typing import Any, Callable, Optional
 
 import numpy as np
 import progressbar as pb
+import torch
+
+from env import ParallelGym
+from policy import BasePolicy
 
 from .base import BaseTrainer
 
@@ -10,12 +14,16 @@ widget = ["training loop: ", pb.Percentage(), " ", pb.Bar(), " ", pb.ETA()]
 
 
 class ReinforceParallelTrainer(BaseTrainer):
+    """
+    Trainer for the REINFORCE policy with parallel environments.
+    """
+
     def __init__(
         self,
-        policy,
-        environment,
-        optimizer,
-        scheduler=None,
+        policy: BasePolicy,
+        environment: ParallelGym,
+        optimizer: torch.optim.Optimizer,
+        scheduler: Optional[Any] = None,
         max_steps_per_episode=1000,
         gamma=0.99,
         print_every=100,
@@ -41,6 +49,14 @@ class ReinforceParallelTrainer(BaseTrainer):
         )
 
     def _collect_trajectory(self, nrand=5, action1=None, action2=None):
+        """
+        Collect a trajectory from the environment.
+
+        Args:
+            nrand: The number of random steps to take.
+            action1: The first action to take.
+            action2: The second action to take.
+        """
 
         # number of parallel instances
         n = len(self.environment.processes)
@@ -102,6 +118,19 @@ class ReinforceParallelTrainer(BaseTrainer):
         return prob_list, state_list, action_list, reward_list
 
     def train(self, episodes, **kwargs):
+        """
+        Train the policy.
+
+        Args:
+            episodes: The number of episodes to train for.
+            **kwargs: Additional keyword arguments.
+                - beta: The beta value for the entropy regularization.
+                - action1: The first action to take.
+                - action2: The second action to take.
+                - future_rewards_only: Whether to use future rewards only.
+                - normalize_rewards: Whether to normalize the rewards.
+                - beta_decay: The beta decay value.
+        """
         timer = pb.ProgressBar(widgets=widget, maxval=episodes).start()
         scores = []  # list containing scores from each episode
         scores_window = deque(maxlen=self.print_every)
@@ -109,6 +138,9 @@ class ReinforceParallelTrainer(BaseTrainer):
         beta = kwargs.get("beta", 0.01)
         action1 = kwargs.get("action1", None)
         action2 = kwargs.get("action2", None)
+
+        if action1 is None or action2 is None:
+            raise ValueError("Actions must be provided.")
 
         for episode in range(1, episodes + 1):
             old_probs, states, actions, rewards = self._collect_trajectory(
