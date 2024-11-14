@@ -4,50 +4,8 @@ from typing import Any, List, Tuple
 import numpy as np
 
 from .openai import Gym
-
-
-class CloudpickleWrapper:
-    """Wrapper to enable multiprocessing with cloudpickle serialization."""
-
-    def __init__(self, x):
-        self.x = x
-
-    def __getstate__(self):
-        import cloudpickle
-
-        return cloudpickle.dumps(self.x)
-
-    def __setstate__(self, ob):
-        import pickle
-
-        self.x = pickle.loads(ob)
-
-
-def worker(remote, parent_remote, env_fn_wrapper):
-    """Worker process to handle environment interactions asynchronously."""
-    parent_remote.close()
-    env = env_fn_wrapper.x
-    while True:
-        try:
-            cmd, data = remote.recv()
-            if cmd == "step":
-                ob, reward, done, info, _ = env.step(data)
-                if done:
-                    ob = env.reset()[0]
-                remote.send((ob, reward, done, info))
-            elif cmd == "reset":
-                ob = env.reset()[0]
-                remote.send(ob)
-            elif cmd == "close":
-                remote.close()
-                break
-            elif cmd == "get_spaces":
-                remote.send((env.observation_space, env.action_space))
-            else:
-                raise NotImplementedError(f"Unknown command {cmd}")
-        except EOFError:
-            print("EOFError: Worker encountered an issue and will shut down.")
-            break
+from .pickle import CloudpickleWrapper
+from .worker import worker
 
 
 class ParallelGym(Gym):
