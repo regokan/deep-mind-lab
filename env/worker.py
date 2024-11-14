@@ -17,7 +17,7 @@ def worker(remote, parent_remote, env_fn_wrapper):
                 remote.close()
                 break
             elif cmd == "get_spaces":
-                remote.send((env.get_observation_space(), env.get_action_space()))
+                remote.send((env.observation_space, env.action_space))
             else:
                 raise NotImplementedError(f"Unknown command {cmd}")
         except EOFError:
