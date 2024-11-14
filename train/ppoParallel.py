@@ -116,7 +116,9 @@ class PPOParallelTrainer(ReinforceParallelTrainer):
 
             if self.scheduler:
                 # Check if the scheduler is of type ReduceLROnPlateau
-                if isinstance(self.scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+                if isinstance(
+                    self.scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau
+                ):
                     self.scheduler.step(np.mean(scores_window))
                 else:
                     self.scheduler.step()

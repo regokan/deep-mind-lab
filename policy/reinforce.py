@@ -14,6 +14,7 @@ class ReinforcePolicy(BasePolicy, nn.Module):
     """
     REINFORCE policy.
     """
+
     def __init__(self, model: nn.Module, device: str = "cpu"):
         """
         Initialize the REINFORCE policy.
