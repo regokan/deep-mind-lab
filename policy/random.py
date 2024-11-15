@@ -15,7 +15,7 @@ class RandomPolicy(BasePolicy):
         """
         self.action_space = action_space
 
-    def select_action(self, len_decision_steps):
+    def select_action(self, observation):
         """Selects a random action, ignoring the current state."""
         # Check if action space is from OpenAI Gym
         if hasattr(self.action_space, "sample"):
@@ -25,7 +25,7 @@ class RandomPolicy(BasePolicy):
         if hasattr(self.action_space, "is_discrete") or hasattr(
             self.action_space, "is_continuous"
         ):
-            return self.action_space.random_action(len_decision_steps)
+            return self.action_space.random_action(observation.shape[0])
 
     def update_exploration(self, episode):
         """Does nothing since this policy doesn't learn from experience."""
