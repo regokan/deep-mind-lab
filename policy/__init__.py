@@ -15,6 +15,7 @@ from .reinforceParallel import ReinforceParallelPolicy
 from .sarsa import SarsaPolicy
 from .sarsaExpected import SarsaExpectedPolicy
 from .sarsaMax import SarsaMaxPolicy
+from .ppoMDAUE import PPO_MDA_UE_Policy
 
 __all__ = [
     "BasePolicy",
@@ -32,4 +33,5 @@ __all__ = [
     "ReinforcePolicy",
     "ReinforceParallelPolicy",
     "PPOParallelPolicy",
+    "PPO_MDA_UE_Policy"
 ]

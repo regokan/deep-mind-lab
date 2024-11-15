@@ -1,6 +1,7 @@
 from .base import BaseTrainer
 from .crossEntropy import CrossEntropyTrainer
 from .hillClimbing import TrainerHillClimbing
+from .ppoMDAUE import PPOMDAUETrainer
 from .ppoParallel import PPOParallelTrainer
 from .reinforce import ReinforceTrainer
 from .reinforceParallel import ReinforceParallelTrainer
@@ -18,4 +19,5 @@ __all__ = [
     "ReinforceTrainer",
     "ReinforceParallelTrainer",
     "PPOParallelTrainer",
+    "PPOMDAUETrainer",
 ]
