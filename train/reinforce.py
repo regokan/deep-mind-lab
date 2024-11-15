@@ -2,8 +2,9 @@ from collections import deque
 
 import numpy as np
 import progressbar as pb
-
+from mlagents_envs.base_env import ActionTuple
 from .base import BaseTrainer
+from env import MLAgents
 
 widget = ["training loop: ", pb.Percentage(), " ", pb.Bar(), " ", pb.ETA()]
 
@@ -40,15 +41,27 @@ class ReinforceTrainer(BaseTrainer):
         scores = []  # list containing scores from each episode
         scores_window = deque(maxlen=100)  # last 100 scores
 
+        preprocess_state_fn = kwargs.get("preprocess_state_fn", None)
+
         for episode in range(1, episodes + 1):
             rewards = []
             state = self.environment.reset()[0]
             for _ in range(self.max_steps_per_episode):
+                if preprocess_state_fn:
+                    state = preprocess_state_fn(state)
                 action = self.policy.select_action(state)
+                if isinstance(self.environment, MLAgents):
+                    action = ActionTuple(
+                        discrete=action.unsqueeze(1).numpy(),
+                    )
+                else:
+                    action = action.item()
                 next_state, reward, done, _, _ = self.environment.step(action)
                 state = next_state
                 rewards.append(reward)
-                if done:
+                if (isinstance(done, np.ndarray) and done.all()):
+                    break
+                elif isinstance(done, bool) and done:
                     break
 
             scores_window.append(sum(rewards))
@@ -97,7 +110,9 @@ class ReinforceTrainer(BaseTrainer):
         timer.finish()
         return scores
 
-    def evaluate(self, episodes):
+    def evaluate(self, episodes, **kwargs):
+        preprocess_state_fn = kwargs.get("preprocess_state_fn", None)
+
         total_rewards = 0
         for _ in range(episodes):
             state = self.environment.reset()[0]
@@ -105,8 +120,19 @@ class ReinforceTrainer(BaseTrainer):
             episode_reward = 0
             steps = 0
 
-            while not done and steps < self.max_steps_per_episode:
+            while not (
+                (isinstance(done, np.ndarray) and done.all())
+                or (isinstance(done, bool) and done)
+            ) and steps < self.max_steps_per_episode: 
+                if preprocess_state_fn:
+                    state = preprocess_state_fn(state)
                 action = self.policy.select_action(state)
+                if isinstance(self.environment, MLAgents):
+                    action = ActionTuple(
+                        discrete=action.unsqueeze(1).numpy(),
+                    )
+                else:
+                    action = action.item()
                 state, reward, done, _, _ = self.environment.step(action)
                 episode_reward += reward
                 steps += 1
@@ -115,6 +141,6 @@ class ReinforceTrainer(BaseTrainer):
 
         average_reward = total_rewards / episodes
         print(
-            f"Evaluation: Average reward over {episodes} episodes: {average_reward:.2f}"
+            f"Evaluation: Average reward over {episodes} episodes: {average_reward}"
         )
         return average_reward
