@@ -37,11 +37,12 @@ class ReinforcePolicy(BasePolicy, nn.Module):
         """
         if isinstance(state, np.ndarray):
             state = torch.from_numpy(state).float().to(self.device)
+        state = state.to(self.device)
         probs = self.model.forward(state).cpu()
         m = Categorical(probs)
         action = m.sample()
         self.saved_log_probs.append(m.log_prob(action))
-        return action.item()
+        return action
 
     def update_exploration(self, R):
         """
@@ -52,6 +53,8 @@ class ReinforcePolicy(BasePolicy, nn.Module):
         """
         policy_loss = []
         for log_prob in self.saved_log_probs:
+            if isinstance(R, np.ndarray):
+                R = torch.from_numpy(R)
             policy_loss.append(-log_prob * R)
         policy_loss = torch.cat(policy_loss).sum()
         policy_loss.backward()
