@@ -6,6 +6,9 @@
 # Lock file
 poetry.lock
 
+# Local files
+*.local
+
 #### Python ####
 
 # Pycache
