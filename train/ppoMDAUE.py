@@ -122,6 +122,7 @@ class PPOMDAUETrainer(BaseTrainer):
             action_list.append(sampled_actions)
 
             # Stop if all agents are done (for rectangular trajectory storage)
+            # @TODO is the correct way to do this?
             if is_done.all():
                 break
 
